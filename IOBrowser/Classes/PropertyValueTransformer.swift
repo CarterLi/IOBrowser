@@ -58,13 +58,19 @@ public class PropertyValueTransformer: ValueTransformer
             {
                 return PropertyValueTransformer().transformedValue( PropertyListNode( key: value.key, propertyList: NSNumber( value: number ) ) )
             }
-            else if Preferences.shared.dataDisplayMode == 0
+            else
             {
-                return data.base64EncodedString()
-            }
-            else if Preferences.shared.dataDisplayMode == 1
-            {
-                return data.hexadecimalString()
+                switch Preferences.shared.dataDisplayMode
+                {
+                    case 1:
+                        return data.base64EncodedString()
+                    case 2:
+                        return data.hexadecimalString()
+                    case 3:
+                        return String(data: data, encoding: .utf8) ?? "<invalid UTF-8 data>"
+                    default:
+                        return data.description
+                }
             }
         }
 

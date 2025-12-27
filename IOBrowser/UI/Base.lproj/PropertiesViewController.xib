@@ -232,8 +232,10 @@
                                 <font key="font" metaFont="smallSystem"/>
                                 <menu key="menu" id="F8y-bR-cf3">
                                     <items>
-                                        <menuItem title="Base64" state="on" id="PWG-fl-ttC"/>
+                                        <menuItem title="Description" state="on" id="Lda-00-O8K"/>
+                                        <menuItem title="Base64" id="PWG-fl-ttC"/>
                                         <menuItem title="Hexadecimal" id="Mup-cB-vHw"/>
+                                        <menuItem title="UTF-8" id="pTr-9W-CVS"/>
                                     </items>
                                 </menu>
                             </popUpButtonCell>
