@@ -42,21 +42,61 @@ public class PropertyValueTransformer: ValueTransformer
 
         if let number = value.propertyList as? NSNumber
         {
-            if Preferences.shared.numberDisplayMode == 0
+            if CFGetTypeID(number) == CFBooleanGetTypeID()
+            {
+                return number.boolValue ? "true" : "false"
+            }
+            else if Preferences.shared.numberDisplayMode == 0
             {
                 return number.description
             }
-            else if Preferences.shared.numberDisplayMode == 1
+            else
             {
-                return String( format: "0x%llX", number.int64Value )
+                switch CFNumberGetType(number)
+                {
+                    case .sInt8Type, .sInt16Type, .sInt32Type, .sInt64Type, .charType, .shortType, .intType, .longType, .longLongType:
+                        return String(format: "0x%0*llX", CFNumberGetByteSize(number) * 2, number.uint64Value)
+
+                    case .float32Type, .float64Type, .floatType, .doubleType, .cgFloatType:
+                        return String(format: "0x%a", number.doubleValue)
+
+                    default:
+                        return number.description
+                }
             }
         }
 
         if let data = value.propertyList as? Data, data.count > 0
         {
-            if Preferences.shared.detectNumbersInData, let number = data.number()
+            if Preferences.shared.detectNumbersInData != 0, [1, 2, 4, 8].contains(data.count)
             {
-                return PropertyValueTransformer().transformedValue( PropertyListNode( key: value.key, propertyList: NSNumber( value: number ) ) )
+                var number: UInt64 = 0
+
+                switch (Preferences.shared.detectNumbersInData)
+                {
+                    case 1: // big-endian
+                        for byte in data
+                        {
+                            number = (number << 8) | UInt64(byte)
+                        }
+                    case 2: // little-endian
+                        for ( i, byte ) in data.enumerated()
+                        {
+                            number |= UInt64( byte ) << ( i * 8 )
+                        }
+                    default:
+                        break
+                }
+
+                if Preferences.shared.numberDisplayMode == 0
+                {
+                    return number.description
+                }
+                else
+                {
+                    let width = data.count * 2
+                    return String(format: "0x%0*llX", width, number)
+                }
             }
             else
             {
@@ -65,7 +105,7 @@ public class PropertyValueTransformer: ValueTransformer
                     case 1:
                         return data.base64EncodedString()
                     case 2:
-                        return data.hexadecimalString()
+                        return "0x" + data.map { String(format: "%02X", $0) }.joined()
                     case 3:
                         return String(data: data, encoding: .utf8) ?? "<invalid UTF-8 data>"
                     default:
