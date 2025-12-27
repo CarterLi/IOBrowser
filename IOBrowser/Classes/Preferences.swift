@@ -71,11 +71,11 @@ public class Preferences: NSObject
         }
     }
 
-    @objc public dynamic var detectNumbersInData: Bool
+    @objc public dynamic var detectNumbersInData: Int
     {
         get
         {
-            UserDefaults.standard.bool( forKey: "detectNumbersInData" )
+            UserDefaults.standard.integer( forKey: "detectNumbersInData" )
         }
 
         set( value )
