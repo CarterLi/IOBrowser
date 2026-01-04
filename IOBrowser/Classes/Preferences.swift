@@ -50,9 +50,9 @@ public class Preferences: NSObject
 
         set( value )
         {
-            self.willChangeValue( for: \.lastStart )
+            self.willChangeValue( for: \.numberDisplayMode )
             UserDefaults.standard.set( value, forKey: "numberDisplayMode" )
-            self.didChangeValue( for: \.lastStart )
+            self.didChangeValue( for: \.numberDisplayMode )
         }
     }
 
@@ -65,9 +65,9 @@ public class Preferences: NSObject
 
         set( value )
         {
-            self.willChangeValue( for: \.lastStart )
+            self.willChangeValue( for: \.dataDisplayMode )
             UserDefaults.standard.set( value, forKey: "dataDisplayMode" )
-            self.didChangeValue( for: \.lastStart )
+            self.didChangeValue( for: \.dataDisplayMode )
         }
     }
 
@@ -80,9 +80,9 @@ public class Preferences: NSObject
 
         set( value )
         {
-            self.willChangeValue( for: \.lastStart )
+            self.willChangeValue( for: \.detectNumbersInData )
             UserDefaults.standard.set( value, forKey: "detectNumbersInData" )
-            self.didChangeValue( for: \.lastStart )
+            self.didChangeValue( for: \.detectNumbersInData )
         }
     }
 
